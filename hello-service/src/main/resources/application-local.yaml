@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    config:
+      enabled: false
+    discovery:
+      enabled: false
+  zipkin:
+    enabled: false
+
+tanzu:
+  env: local
