@@ -17,11 +17,14 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 public class HelloResource {
 
-    @Inject
-    private DiscoveryClient discoveryClient;
-
     @Value("${tanzu.env}")
     private String env;
+
+    private DiscoveryClient discoveryClient;
+
+    public HelloResource(DiscoveryClient discoveryClient){
+        this.discoveryClient = discoveryClient;
+    }
 
     @GetMapping("/")
     public String index() {

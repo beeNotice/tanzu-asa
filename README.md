@@ -1,6 +1,11 @@
-# https://github.com/Azure-Samples/acme-fitness-store
-# https://learn.microsoft.com/en-us/azure/spring-apps/quickstart?tabs=Azure-CLI
 
+
+## Installation
+
+* https://github.com/Azure-Samples/acme-fitness-store
+* https://learn.microsoft.com/en-us/azure/spring-apps/quickstart?tabs=Azure-CLI
+
+```bash
 WORKSPACE_PATH=/mnt/c/Dev/workspaces/tanzu-asa
 cd $WORKSPACE_PATH
 
@@ -91,8 +96,10 @@ az spring app create --name ${HELLO_SERVICE_APP} \
 --memory 1Gi
 
 # Déploiement d'une application
-az spring app deploy --name hello-asae \
---source-path hello-asae
+az spring app deploy --name ${HELLO_SERVICE_APP} \
+--config-file-pattern hello/asa \
+--source-path hello-service \
+--env 'SPRING_PROFILES_ACTIVE=asa'
 
 # Configure Application Configuration Service
 az spring application-configuration-service git repo add --name tanzu-asa-config \
@@ -133,9 +140,15 @@ az spring api-portal update --assign-endpoint true
 export PORTAL_URL=$(az spring api-portal show | jq -r '.properties.url')
 echo $PORTAL_URL
 
-###########################################
-# Demo
-###########################################
+# Developer Tools - Enable it through GUI
+# Developer Tools > Manage Tools > Enable App Live View & Enable App Accelerator
+# Add you own
+
+```
+
+## Demo
+
+```bash
 # Refresh
 # https://learn.microsoft.com/en-us/azure/spring-apps/how-to-enterprise-application-configuration-service#refresh-strategies
 # The refresh frequency is managed by Azure Spring Apps and fixed to 60 seconds.
@@ -145,52 +158,23 @@ export SPRING_APPS_TEST_ENDPOINT=$(az spring test-endpoint list \
 --resource-group ${RESOURCE_GROUP} | jq -r '.primaryTestEndpoint')
 
 curl ${SPRING_APPS_TEST_ENDPOINT}/${HELLO_SERVICE_APP}/default/actuator/refresh -d {} -H "Content-Type: application/json"
+```
 
-# Prepare Blue/Green deployments
-az spring app deployment create --name blue --app ${HELLO_SERVICE_APP}
+## Day 2
 
-# Deploy Hello Service
-az spring app deploy --name ${HELLO_SERVICE_APP} \
---deployment blue \
---config-file-pattern hello/asa \
---source-path hello-service \
---env 'SPRING_PROFILES_ACTIVE=asa'
-
-# Promote
-az spring app set-deployment -n ${HELLO_SERVICE_APP} --deployment blue
-az spring app deployment delete --name default --app ${HELLO_SERVICE_APP}
-
-###########################################
-# Day 2
-###########################################
+```bash
 az spring app restart -n ${HELLO_SERVICE_APP}
 
 az spring app list --output table
 az spring app show --name ${HELLO_SERVICE_APP} --query properties.activeDeployment.properties.instances --output table
 
-az spring app logs --name ${HELLO_SERVICE_APP} --follow --deployment blue
+az spring app logs --name ${HELLO_SERVICE_APP}
+```
 
+## Endpoints
 
-###########################################
-# Endpoints
-###########################################
-asa-tanzu-fmartin-gateway-70d55.svc.azuremicroservices.io
-/
-/service-instances/hello-service
-/invoke-hello
+* /
+* /service-instances/hello-service
+* /invoke-hello
+* /actuator
 
-# Demo
-Slides
-Support VMware Spring Runtime
-Azure Spring Apps
-- App, Deploy, instance
-- Integration
-- Blue Green
-  Build
-  Config
-  Service
-- /invoke-hello
-  Cloud
-- https://asa-tanzu-fmartin-gateway-70d55.svc.azuremicroservices.io/
-  API
-- https://asa-tanzu-fmartin-apiportal-27833.svc.azuremicroservices.io/group/tanzu-azure-spring-apps
