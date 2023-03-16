@@ -1,5 +1,3 @@
-
-
 ## Installation
 
 * https://github.com/Azure-Samples/acme-fitness-store
@@ -26,6 +24,8 @@ az spring create --name ${SPRING_APPS_SERVICE} \
 --sku Enterprise \
 --enable-application-configuration-service \
 --enable-service-registry \
+--enable-application-accelerator \
+--enable-application-live-view \
 --enable-gateway \
 --enable-api-portal \
 --build-pool-size S2
@@ -141,9 +141,10 @@ export PORTAL_URL=$(az spring api-portal show | jq -r '.properties.url')
 echo $PORTAL_URL
 
 # Developer Tools - Enable it through GUI
-# Developer Tools > Manage Tools > Enable App Live View & Enable App Accelerator
-# Add you own
-
+az spring dev-tool create \
+    --resource-group ${RESOURCE_GROUP} \
+    --service ${SPRING_APPS_SERVICE} \
+    --assign-endpoint
 ```
 
 ## Demo
