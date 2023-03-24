@@ -31,4 +31,3 @@ engine:
                   with: "'<artifactId>' + #artifactId + '</artifactId>'"
                 - text: "<version>0.0.1-SNAPSHOT</version>"
                   with: "'<version>' + #version + '</version>'"
-    - type: Provenance
