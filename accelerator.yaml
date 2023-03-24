@@ -1,0 +1,34 @@
+accelerator:
+  options:
+    - name: groupId
+      inputType: text
+      defaultValue: "com.tanzu.asa"
+      label: Module group name
+      required: true
+    - name: artifactId
+      inputType: text
+      defaultValue: "tanzu-asa"
+      label: Module artifact name
+      required: true
+    - name: version
+      inputType: text
+      defaultValue: "0.0.1-SNAPSHOT"
+      label: Project version
+      required: true
+
+engine:
+  chain:
+    - merge:
+        - include: [ "**" ]
+          exclude: [ "pom.xml" ]
+        - include: [ "pom.xml" ]
+          chain:
+            - type: ReplaceText
+              substitutions:
+                - text: "<groupId>com.tanzu.asa</groupId>"
+                  with: "'<groupId>' + #groupId + '</groupId>'"
+                - text: "<artifactId>tanzu-asa</artifactId>"
+                  with: "'<artifactId>' + #artifactId + '</artifactId>'"
+                - text: "<version>0.0.1-SNAPSHOT</version>"
+                  with: "'<version>' + #version + '</version>'"
+    - type: Provenance

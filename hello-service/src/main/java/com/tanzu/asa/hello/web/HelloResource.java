@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -17,6 +19,8 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 public class HelloResource {
 
+    private static final Logger LOG = LoggerFactory.getLogger(HelloResource.class);
+
     @Value("${tanzu.env}")
     private String env;
 
@@ -28,7 +32,7 @@ public class HelloResource {
 
     @GetMapping("/")
     public String index() {
-        return String.format("Greetings v2 from %s!", env);
+        return String.format("Greetings from %s!", env);
     }
 
     // hello-service
@@ -45,14 +49,16 @@ public class HelloResource {
         return String.format("Invoking hello-service : %s!", response);
     }
 
-    // 900003883
+    // 9006919 | 900003883
     @GetMapping("/prime/{number}")
     public String prime(@PathVariable long number) {
         for (long i = 2; i <= number / 2; ++i) {
             if (number % i == 0) {
+                LOG.trace("{} is not a prime number", number);
                 return String.format("%s is not a prime number", number);
             }
         }
+        LOG.trace("{} is a prime number", number);
         return String.format("%s is a prime number", number);
     }
 
