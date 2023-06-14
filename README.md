@@ -39,11 +39,16 @@ curl ${SPRING_APPS_TEST_ENDPOINT}/${HELLO_SERVICE_APP}/default/actuator/refresh 
 ## Operations
 
 ```bash
+# Restart
 az spring app restart -n ${HELLO_SERVICE_APP}
 
+# Applications
 az spring app list --output table
+
+# Instances
 az spring app show --name ${HELLO_SERVICE_APP} --query properties.activeDeployment.properties.instances --output table
 
+# Logs
 az spring app logs --name ${HELLO_SERVICE_APP}
 ```
 

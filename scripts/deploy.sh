@@ -111,6 +111,7 @@ az spring service-registry bind --app ${HELLO_SERVICE_APP}
 az spring app deploy --name ${HELLO_SERVICE_APP} \
 --config-file-pattern hello/asa \
 --source-path hello-service \
+--build-env 'BP_JVM_VERSION=17.*' \
 --env 'SPRING_PROFILES_ACTIVE=asa'
 
 # API Gateway
