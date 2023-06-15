@@ -42,22 +42,8 @@ public class HelloResource {
     @GetMapping(value = "/invoke-hello")
     public String invokeServiceHello() {
         RestTemplate restTemplate = new RestTemplate();
-        // hello-service matches the name of the application declared in asa
+        // hello-service matches the name of the application declared in asa-e
         String response = restTemplate.getForObject("http://hello-service", String.class);
         return String.format("Invoking hello-service : %s!", response);
     }
-
-    // 9006919 | 900003883
-    @GetMapping("/prime/{number}")
-    public String prime(@PathVariable long number) {
-        for (long i = 2; i <= number / 2; ++i) {
-            if (number % i == 0) {
-                LOG.trace("{} is not a prime number", number);
-                return String.format("%s is not a prime number", number);
-            }
-        }
-        LOG.trace("{} is a prime number", number);
-        return String.format("%s is a prime number", number);
-    }
-
 }
