@@ -22,21 +22,9 @@ public class HelloResource {
     @Value("${tanzu.env}")
     private String env;
 
-    private DiscoveryClient discoveryClient;
-
-    public HelloResource(DiscoveryClient discoveryClient){
-        this.discoveryClient = discoveryClient;
-    }
-
     @GetMapping("/")
     public String index() {
         return String.format("Greetings from %s!", env);
-    }
-
-    // hello-service
-    @GetMapping("/service-instances/{applicationName}")
-    public List<ServiceInstance> serviceInstancesByApplicationName(@PathVariable String applicationName) {
-        return discoveryClient.getInstances(applicationName);
     }
 
     @GetMapping(value = "/invoke-hello")
